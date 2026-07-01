@@ -7,7 +7,7 @@ variable "location" {
 variable "vm_size" {
   description = "Size of the Windows VM"
   type        = string
-  default     = "Standard_B2ms"
+  default     = "Standard_D2s_v3"
 }
 
 variable "admin_username" {
