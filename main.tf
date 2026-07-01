@@ -54,6 +54,8 @@ resource "azurerm_network_interface" "nic" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
+  depends_on = [azurerm_subnet.subnet]
+
   ip_configuration {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.subnet.id
@@ -67,6 +69,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = var.vm_size
+
+  depends_on = [azurerm_network_interface.nic]
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   network_interface_ids = [
