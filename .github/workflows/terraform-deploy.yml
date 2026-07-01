@@ -20,10 +20,6 @@ jobs:
     name: Deploy Azure Windows VM
     runs-on: ubuntu-latest
     env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_USE_AZURE_CLI: false
       ARM_USE_MSI: false
       TF_VAR_admin_password: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
@@ -31,6 +27,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Export Azure credentials for Terraform
+        shell: bash
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        run: |
+          echo "ARM_CLIENT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.clientId')" >> "$GITHUB_ENV"
+          echo "ARM_CLIENT_SECRET=$(echo "$AZURE_CREDENTIALS" | jq -r '.clientSecret')" >> "$GITHUB_ENV"
+          echo "ARM_SUBSCRIPTION_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.subscriptionId')" >> "$GITHUB_ENV"
+          echo "ARM_TENANT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.tenantId')" >> "$GITHUB_ENV"
       
       - name: Azure Login
         uses: azure/login@v2
