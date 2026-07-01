@@ -1,9 +1,6 @@
 name: Terraform Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       action:
@@ -55,11 +52,12 @@ jobs:
         run: terraform validate
 
       - name: Terraform plan
+        if: github.event.inputs.action == 'apply'
         run: terraform plan -out=tfplan
 
-      # - name: Terraform apply
-      #   if: github.event_name == 'push' || github.event.inputs.action == 'apply'
-      #   run: terraform apply -auto-approve tfplan
+      - name: Terraform apply
+        if: github.event.inputs.action == 'apply'
+        run: terraform apply -auto-approve tfplan
 
       - name: Terraform destroy
         if: github.event.inputs.action == 'destroy'
