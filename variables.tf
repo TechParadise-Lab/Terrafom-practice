@@ -1,7 +1,7 @@
 variable "location" {
   description = "Azure region to deploy into"
   type        = string
-  default     = "eastus2"
+  default     = "westus"
 }
 
 variable "vm_size" {
